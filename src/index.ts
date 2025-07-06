@@ -11,10 +11,9 @@ const app = express();
 // ✅ Define all allowed frontend domains (add localhost for dev if needed)
 const allowedOrigins = [
   "https://pay.xtopay.co",
-  "https://checkout.xtopay.com",
+  "https://checkout.xtopay.co",
   "https://www.checkout.xtopay.co",
   "https://www.pay.xtopay.co",
-  "", // allow no origin (e.g., Postman)
   "http://localhost:3000", // optional for dev
 ];
 
