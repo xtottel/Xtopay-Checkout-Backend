@@ -8,42 +8,49 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Define all allowed frontend domains (add localhost for dev if needed)
+// ✅ Define all allowed frontend domains (production + local dev)
 const allowedOrigins = [
   "https://pay.xtopay.co",
   "https://www.pay.xtopay.co",
-  "http://localhost:3000", // optional for dev
+  "https://xtopay.co",
+  "https://www.xtopay.co",
+  "http://localhost:3000",
   "http://localhost:3001",
 ];
 
-// ✅ Apply robust CORS middleware
+// ✅ Setup CORS middleware
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow server-to-server or Postman
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g., Postman or backend-to-backend)
+      if (!origin) return callback(null, true);
+
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       } else {
-        return callback(new Error(`CORS error: Origin ${origin} not allowed`));
+        console.error(`❌ Blocked by CORS: ${origin}`);
+        return callback(new Error(`CORS error: Origin ${origin} not allowed`), false);
       }
     },
-    credentials: true,
+    credentials: true, // if you're using cookies/auth
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // optional: limit allowed methods
+    allowedHeaders: ["Content-Type", "Authorization"],     // optional: restrict headers
   })
 );
 
 // ✅ Parse JSON requests
 app.use(express.json());
 
-// ✅ Health check
+// ✅ Health check route
 app.get("/", (req, res) => {
-  res.send("Xtopay Backend API is running.");
+  res.send("✅ Xtopay Backend API is running.");
 });
 
-// ✅ Register API routes
+// ✅ Register all route handlers
 app.use("/", routes);
 
-// ✅ Start the server
+// ✅ Start server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  console.log(`🚀 Xtopay API running on port ${PORT}`);
+  console.log(`🚀 Xtopay API is live on port ${PORT}`);
 });
