@@ -79,7 +79,7 @@ export async function checkoutInitiate(req: Request, res: Response) {
       status: "success",
       data: {
         checkoutId,
-        checkoutUrl: `${process.env.CHECKOUT_BASE_URL || "https://pay.xtopay.co"}/checkout/${checkoutId}`,
+        checkoutUrl: `${process.env.CHECKOUT_BASE_URL || "https://pay.xtopay.co"}/${checkoutId}`,
         expiresAt: expiresAt.toISOString(),
         clientReference,
         amount: parseFloat(amount),
